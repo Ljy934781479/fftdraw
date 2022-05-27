@@ -18,6 +18,17 @@ CReadBmp::~CReadBmp()
 	free(_Buffer);
 }
 
+int CReadBmp::colorSet(COLOR target, COLOR toSet, int mode)
+{
+	for (int y = 0; y < getHigh(); y++)
+		for (int x = 0; x < getWidth(); x++)
+			if ( mode && getPixel(x, y) == target)
+				setPixel(toSet, x, y);
+			else if(!mode && getPixel(x, y) != target)
+				setPixel(toSet, x, y);
+	return 0;
+}
+
 bool CReadBmp::isClosePix(int x1, int y1, int x2, int y2)
 {
 	if (abs(x1 - x2) == 1 || abs(y1 - y2) == 1)
@@ -365,11 +376,7 @@ int CReadBmp::setOutline(COLOR need, COLOR background, COLOR set)
 int CReadBmp::creatOutlineList()
 {
 	save24bit("d:\\CodeWork\\轮廓识别结果.bmp");
-	//所有不是轮廓点的设为白色
-	for (int y = 0; y < getHigh(); y++)
-		for (int x = 0; x < getWidth(); x++)
-			if (getPixel(x, y) != BLUE)
-				setPixel(WHITE, x, y);
+	colorSet(BLUE, WHITE, 0);
 	//存在出度不止一个的情况下,只走一个先
 	bool bOkpath = false;
 	int curx = _beginX;
@@ -380,7 +387,7 @@ int CReadBmp::creatOutlineList()
 	setPixel(GREEN, curx, cury);
 	//用一个栈记录所有多出度的点
 	stack<pair<int, int> > staNode;
-	//用一个栈记录链表
+	//用一个栈记录路径
 	stack<pair<int, int> > staPath;
 	staPath.push(PAIR_2INT(curx, cury));
 	auto lmb = [&](int x, int y) {
@@ -395,11 +402,9 @@ int CReadBmp::creatOutlineList()
 		}
 	};
 	while (1)
-	{
-		lmb(curx - 1, cury);
-		lmb(curx + 1, cury);
-		lmb(curx, cury - 1);
-		lmb(curx, cury + 1);
+	{//检查周围八个点
+		for(int i = 0;i<9;i++)//这里还是能优化的? 多出度的点回溯经历这里就有重复操作了.如果用map记录每个点的出度,这样优化会明显吗? 空间肯定要牺牲了
+			lmb(curx+(i%3)-1, cury + i/3 -1);
 		if (count == 0){//如果没有出度并且临近最开始的点,则完成
 			if(isClosePix(curx,cury,_beginX,_beginY))
 				break;
@@ -439,6 +444,7 @@ int CReadBmp::creatOutlineList()
 		staPath.pop();
 	}
 	_OutlineList = l;
+	colorSet(BLUE, WHITE, 1);
 	save24bit("d:\\CodeWork\\轮廓链表建立结果.bmp");
 	return 0;
 }
