@@ -10,15 +10,15 @@ using namespace std;
 
 #define PI 3.14159265359
 #define TIME_LEN 6*361  //时域总长度
-#define TIME_DX 0.01		//时域微分
-#define POINT_RATIO 1   //画一个点用的比例
-#define COORD_RATIO 1  //复平面上单位1,用多少个像素画
-#define COUNT_CIRC  400 //周转圆个数*2
+#define TIME_DX 0.01	//时域微分
+#define POINT_RATIO 1 //画一个点用的比例
+#define COORD_RATIO 1 //复平面上单位1,用多少个像素画
+//#define COUNT_CIRC  250 //周转圆个数*2
 
 class CFFT
 {
 public:
-	CFFT(Cpx* l, int listSize);
+	CFFT(Cpx* l, int listSize,int countCirc);
 	~CFFT();
 	Cpx Myexp(Cpx& c);
 	//根据复数的大小,返回实际图像中的像素位置
@@ -69,4 +69,5 @@ private:
 	int _progress = 0;//画图进度
 	int _w = 0;
 	int _h = 0;
+	int _countCirc = 0;
 };

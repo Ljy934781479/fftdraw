@@ -1,8 +1,9 @@
 
 #include"../_ClassHpp/fftAnalysis.hpp"
 #include <string>
-CFFT::CFFT(Cpx* l, int listSize)
+CFFT::CFFT(Cpx* l, int listSize,int countCirc)
 {
+	_countCirc = countCirc;
 	_listSize = listSize;
 	_list = l;
 	_bmp = new CReadBmp();
@@ -107,9 +108,9 @@ void CFFT::work(int w,int h)
 	creatCoord(COORD_RATIO);
 	_ratio = COORD_RATIO;
 	//draw2d();
-	drawPhoto(COUNT_CIRC);
+	drawPhoto(_countCirc);
 	string str = "d:\\CodeWork\\";
-	str += to_string(COUNT_CIRC) + ".bmp";
+	str += to_string(_countCirc) + ".bmp";
 	_bmp->save24bit(str.c_str());
 }
 

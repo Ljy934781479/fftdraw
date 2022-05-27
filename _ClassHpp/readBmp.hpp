@@ -14,6 +14,7 @@ class CReadBmp
 public:
 	CReadBmp();
 	~CReadBmp();
+	int colorSet(COLOR target, COLOR toSet,int mode = 0);
 	//两个点是否相邻,从四个方向来看
 	bool isClosePix(int x1, int y1, int x2, int y2);
 	bool readFile(const wchar_t* pFileName);
