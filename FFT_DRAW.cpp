@@ -10,15 +10,6 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	if (argc != 4)
-	{
-		cout << "*仅以此尝试对公式的理解,只是自己写代码做图,并没有做动画效果,可能以后会用QT做.*" << endl;
-		cout << "参数: s, n, k. " << endl;
-		cout << "s:图片源.(要求24位位图.)" << endl;
-		cout << "n:程序会将图片二值化, 每个像素RGB转HSV，对于h分量小于n的改为白色,否则红色." << endl;
-		cout << "k:周转圆的频率会从[-k,k]取值,越大越逼近原图像但也耗时更久." << endl;
-		return 0;
-	}
 	CReadBmp p;
 	p.readFile(argv[1]);
 	p.binaryzation(RED,WHITE,_wtof(argv[2]));
